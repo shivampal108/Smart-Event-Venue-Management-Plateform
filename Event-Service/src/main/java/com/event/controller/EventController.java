@@ -51,7 +51,7 @@ public class EventController {
 	public ResponseEntity<?> viewEvent() {
 		
 		
-		ApiResponse success= new SuccessResponse<List<EventResponseDto>>(eService.viewAllEvents(), HttpStatus.CREATED.value(), "Event fetched Successfully", LocalDateTime.now());
+		ApiResponse success= new SuccessResponse<List<EventResponseDto>>(eService.viewAllEvents(), HttpStatus.OK.value(), "Event fetched Successfully", LocalDateTime.now());
 		
 		return ResponseEntity.status(HttpStatus.OK).body(success);
 		
