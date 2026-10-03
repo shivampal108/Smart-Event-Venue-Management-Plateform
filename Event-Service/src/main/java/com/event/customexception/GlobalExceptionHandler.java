@@ -11,6 +11,7 @@ import com.event.response.ApiResponse;
 import com.event.response.ErrorResponse;
 
 import feign.FeignException;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,6 +27,37 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 		
 	}
+	
+	
+	@ExceptionHandler(VenueConflictException.class)
+	
+	public ResponseEntity<?> venueConflict(VenueConflictException ex){
+		
+		ApiResponse error= new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+		
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+		
+	}
+	
+	
+	
+	
+	@ExceptionHandler(InvalidFormatException.class)
+	public ResponseEntity<ApiResponse> handleInvalidFormat(
+	        InvalidFormatException ex) {
+
+	    ApiResponse error = new ErrorResponse(
+	            HttpStatus.BAD_REQUEST.value(),
+	            ex.getMessage(),
+	            LocalDateTime.now()
+	    );
+
+	    return ResponseEntity
+	            .status(HttpStatus.BAD_REQUEST)
+	            .body(error);
+	}
+	
 	
 	
 	@ExceptionHandler(FeignException.NotFound.class)

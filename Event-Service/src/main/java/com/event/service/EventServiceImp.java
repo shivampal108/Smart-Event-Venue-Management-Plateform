@@ -1,10 +1,12 @@
 package com.event.service;
 import java.util.ArrayList;
+
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.event.customexception.EventNotFoundException;
+import com.event.customexception.VenueConflictException;
 import com.event.dto.EventRequestDto;
 import com.event.dto.EventResponseDto;
 import com.event.entity.Event;
@@ -27,6 +29,27 @@ public class EventServiceImp implements EventService {
 	
 	@Override
 	public EventResponseDto addEvent(EventRequestDto event) {
+		
+		
+		
+		
+		List<Event> ev = eRepo.findAll();
+
+		for (Event ex : ev) {
+
+		    if (event.getVenueId().equals(ex.getVenueId())
+		            && event.getEventDate().equals(ex.getEventDate())) {
+
+		        throw new VenueConflictException(
+		                "Venue already booked on this date!"
+		        );
+		    }
+		}
+		
+	
+		
+		
+		
 		
 		
 	   venueFeign.viewVenue(event.getVenueId());
@@ -86,7 +109,7 @@ public class EventServiceImp implements EventService {
 	@Override
 	public String deleteEvent(Long id) {
 
-		eRepo.findById(id).orElseThrow(()->new EventNotFoundException("Venut not exhist"));
+		eRepo.findById(id).orElseThrow(()->new EventNotFoundException("Event not exhist"));
 
 		
 		eRepo.deleteById(id);
