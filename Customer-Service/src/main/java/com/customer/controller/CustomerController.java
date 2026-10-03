@@ -35,7 +35,6 @@ public class CustomerController {
 	public ResponseEntity<?> addCsutomer( @Valid @RequestBody CustomerRequestDto request){
 		
 		
-		
 		ApiResponse response= new SuccessResponse<CustomerResponseDto>( custService.addCustomer(request), HttpStatus.CREATED.value(), "customer registered successfully", LocalDateTime.now());
 		
 		return ResponseEntity.status(HttpStatus.OK).body(response);
