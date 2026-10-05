@@ -30,5 +30,8 @@ public interface BookingService {
 	public BookingResponseDto cancleBooking(Long bookingId,Integer noOfSeat,Long paymntId);
 	
 	
+	public List<Long> cancleBooking(Long eventId);
+	
+	
 	
 }

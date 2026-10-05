@@ -17,7 +17,7 @@ public interface EventService {
 	public List<EventResponseDto> viewAllEvents();
 	
 	
-	public String deleteEvent(Long id);
+	public String cancleEvent(Long id);
 	
 	
 	public EventResponseDto updateEvent(EventRequestDto event, long id);

@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.event.customexception.EventNotFoundException;
 import com.event.customexception.VenueConflictException;
+import com.event.dto.EventCancelledDto;
 import com.event.dto.EventRequestDto;
 import com.event.dto.EventResponseDto;
 import com.event.entity.Event;
+import com.event.enums.Status;
 import com.event.feignconfig.VenueFeign;
+import com.event.kafka.EventProducer;
 import com.event.repository.EventRepository;
 
 
@@ -25,6 +28,9 @@ public class EventServiceImp implements EventService {
 	
 	@Autowired
 	private EventRepository eRepo;
+	
+	@Autowired
+	private EventProducer eProducer;
 	
 	
 	@Override
@@ -107,12 +113,25 @@ public class EventServiceImp implements EventService {
 	}
 
 	@Override
-	public String deleteEvent(Long id) {
+	public String cancleEvent(Long id) {
 
-		eRepo.findById(id).orElseThrow(()->new EventNotFoundException("Event not exhist"));
-
+		Event event=  eRepo.findById(id).orElseThrow(()->new EventNotFoundException("Event not exhist"));
 		
-		eRepo.deleteById(id);
+		
+if(event.getStatus()== Status.CANCELLED) {
+	throw new EventNotFoundException("already cancelled");
+}
+		event.setStatus(Status.CANCELLED);
+		event.setAvailableSeats(event.getTotalSeats());
+		
+		
+		EventCancelledDto message= new EventCancelledDto(event.getEventId(), event.getEventName(), "event cancelled");
+		
+		eProducer.publishEventCancelled(message);
+		
+//		System.out.println();
+		
+		eRepo.save(event);
 		
 		return "Event deleted having id: "+ id;
 	}

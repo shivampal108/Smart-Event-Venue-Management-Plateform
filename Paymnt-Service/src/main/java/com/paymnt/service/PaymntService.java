@@ -12,6 +12,8 @@ public interface PaymntService {
 	
 	public String refund(Long paymntId);
 	
+	public String refundAndReleaseSeats(Long eventId);
+	
 	public String getPaymntMode(Long paymntId);
 	
 

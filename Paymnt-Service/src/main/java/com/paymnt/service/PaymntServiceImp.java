@@ -2,6 +2,7 @@ package com.paymnt.service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class PaymntServiceImp implements PaymntService {
 	
 	@Autowired
 	private BookingFeign bFeign;
+	
+	
 
 	@Override
 	@Transactional
@@ -132,6 +135,39 @@ public class PaymntServiceImp implements PaymntService {
 		return pay.getPaymentStatus().toString();
 		
 		
+	}
+
+	@Override
+	public String refundAndReleaseSeats(Long eventId) {
+		// TODO Auto-generated method stub
+		
+	List<Long> bId=	bFeign.cancleBookingStatus(eventId);
+		
+	    
+	List<Paymnt> payments= pRepo.findAll();	
+	
+	for(Paymnt p:payments) {
+	for(Long x:bId) {
+		
+		if(p.getBookingId().equals(x)) {
+			
+			
+			p.setPaymentStatus(PaymntStatus.REFUND);
+			
+			pRepo.save(p);
+	
+			System.out.println("payment saved");
+		}
+			
+		}
+		
+
+		
+	}
+	
+	
+	
+		return "all refunded";
 	}
 	
 	

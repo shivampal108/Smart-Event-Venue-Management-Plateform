@@ -1,4 +1,5 @@
 package com.booking.service;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -220,6 +221,41 @@ return response ;
 }
 		
 		
+	}
+
+
+
+	@Override
+	public List<Long> cancleBooking(Long eventId) {
+	
+		
+		List<Booking> bookings = bRepo.findAll();
+		
+		List<Long> bookingIds= new ArrayList<Long>();
+		
+		for(Booking b:bookings) {
+			
+			if(b.getEventId().equals(eventId)) {
+				
+				bookingIds.add(b.getBookingId());
+				
+				b.setBookingStatus(BookingStatus.CANCELLED);
+				
+				bRepo.save(b);
+				
+				System.out.println("booking canceddeld");
+				
+				
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		return bookingIds;
 	}
 
 

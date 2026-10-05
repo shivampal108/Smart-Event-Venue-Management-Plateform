@@ -5,6 +5,6 @@ public enum Status {
 	PENDING,
 	ONGOING,
 	COMPLETED
-	
+	,CANCELLED
 	
 }
