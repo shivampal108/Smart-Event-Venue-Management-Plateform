@@ -39,6 +39,9 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Roles role; 
 	
+	@Column(unique = true)
+	private Long customerId;
+	
 	
 	//metadata
 	
