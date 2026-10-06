@@ -39,7 +39,7 @@ public class UserController {
 	{
 		System.out.println(":controller");
 		
-	    return uService.login(request, httpRequest, httpResponse);
+	    return uService.login(request);
 	}
 	
 	

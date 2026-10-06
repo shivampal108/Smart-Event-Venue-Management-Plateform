@@ -13,8 +13,7 @@ import com.user.dto.UserResponseDto;
 import com.user.entity.User;
 import com.user.repository.UserRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 
 
 
@@ -53,9 +52,8 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public UserResponseDto login(
-	        UserRequestDto request,
-	        HttpServletRequest sReq,
-	        HttpServletResponse sRes) {
+	        UserRequestDto request
+	      ) {
 
 	    UsernamePasswordAuthenticationToken token =
 	            UsernamePasswordAuthenticationToken.unauthenticated(
@@ -87,5 +85,17 @@ public class UserServiceImp implements UserService {
 	    }
 
 	    return null;
+	}
+
+	@Override
+	public UserResponseDto updateUser(String username, UserRequestDto request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserResponseDto deleteUser(String userName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
