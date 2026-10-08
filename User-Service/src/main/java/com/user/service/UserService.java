@@ -14,7 +14,9 @@ public interface UserService {
 	public UserResponseDto updateUser(String username, UserRequestDto request);
 	
 	
-	public UserResponseDto deleteUser(String userName);
+	public String deleteUser(String userName);
+	
+	public UserResponseDto  viewUser(Long id);
 	
 
 }

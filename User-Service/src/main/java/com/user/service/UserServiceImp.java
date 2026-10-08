@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,40 +52,44 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public UserResponseDto login(
-	        UserRequestDto request
-	      ) {
+	public UserResponseDto login( UserRequestDto request ) {
 
 	    UsernamePasswordAuthenticationToken token =
 	            UsernamePasswordAuthenticationToken.unauthenticated(
 	                    request.getUsername(),
 	                    request.getPassword());
 
-	    System.out.println("1. LOGIN SERVICE");
-	    System.out.println("2. BEFORE AUTHENTICATION");
+//	    System.out.println("1. LOGIN SERVICE");
+//	    System.out.println("2. BEFORE AUTHENTICATION");
 	    
 //	    System.out.println(pEncode.encode(request.getPassword()));
 
-	    try {
+//	    try {
 
 	        Authentication authentication =
 	                authManager.authenticate(token);
 
-	        System.out.println("3. AFTER AUTHENTICATION");
-	        System.out.println("Authenticated: " + authentication.isAuthenticated());
-	        System.out.println("Username: " + authentication.getName());
-	        System.out.println("Authorities: " + authentication.getAuthorities());
+//	        System.out.println("3. AFTER AUTHENTICATION");
+//	        System.out.println("Authenticated: " + authentication.isAuthenticated());
+//	        System.out.println("Username: " + authentication.getName());
+//	        System.out.println("Authorities: " + authentication.getAuthorities());
 
-	    } catch (Exception e) {
+//	    } catch (Exception e) {
+//
+//	        System.out.println("AUTHENTICATION FAILED");
+//	        System.out.println("Exception: " + e.getClass().getName());
+//	        System.out.println("Message: " + e.getMessage());
+//
+//	        e.printStackTrace();
+//	    }
+	        
+	        User user= uRepo.findByUsername(request.getUsername());
+	        
+	        UserResponseDto response= UserResponseDto.builder().build();
+	        
+	        BeanUtils.copyProperties(user, response);
 
-	        System.out.println("AUTHENTICATION FAILED");
-	        System.out.println("Exception: " + e.getClass().getName());
-	        System.out.println("Message: " + e.getMessage());
-
-	        e.printStackTrace();
-	    }
-
-	    return null;
+	    return response ;
 	}
 
 	@Override
@@ -94,8 +99,42 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public UserResponseDto deleteUser(String userName) {
+	public String deleteUser(String userName) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		
+		String loggedUserName= authentication.getName();
+		
+		System.out.println(loggedUserName);
+		
+	User user=	uRepo.findByUsername(loggedUserName);
+		
 		// TODO Auto-generated method stub
-		return null;
+	
+	if(userName.equals(loggedUserName)) {
+		uRepo.delete(user);
+	}
+	
+	else {
+		System.out.println("user not same or suthorize ot delete another user");
+		throw new RuntimeException("user not same");
+		
+	}
+		return "deleted";
+	}
+
+	@Override
+	public UserResponseDto viewUser(Long id) {
+
+				
+				
+				
+		User user=uRepo.findById(id).orElseThrow();
+		
+		UserResponseDto response= UserResponseDto.builder().build();
+		BeanUtils.copyProperties(user, response);
+		
+		return response;
 	}
 }
